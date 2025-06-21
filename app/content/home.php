@@ -1,5 +1,5 @@
 <div class="jumbotron">
-    <div class="container"><h1>Welcome to DIWA!</h1>
+    <div class="container"><h1>Hello, Welcome to DIWA!</h1>
         <p><strong>D</strong>eliberately <strong>I</strong>nsecure <strong>W</strong>eb <strong>A</strong>pplication</p>
     </div>
 </div>
