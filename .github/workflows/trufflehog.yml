@@ -7,11 +7,10 @@ jobs:
   trufflehog-scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Run truffleHog scan
-        uses: trufflesecurity/trufflehog@v3
+        uses: trufflesecurity/trufflehog-action@v1
         with:
-          scan_type: 'filesystem'
-          path: '.'
+          directory: '.'
+          failOnSecrets: true
