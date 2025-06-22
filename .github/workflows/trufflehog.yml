@@ -1,0 +1,25 @@
+name: Secret Scan with truffleHog
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trufflehog-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download trufflehog CLI
+        run: |
+          curl -L https://github.com/trufflesecurity/trufflehog/releases/download/v3.76.0/trufflehog-linux-amd64 -o trufflehog
+          chmod +x trufflehog
+
+      - name: Run trufflehog scan
+        run: ./trufflehog filesystem . --json > trufflehog-results.json || true
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trufflehog-results
+          path: trufflehog-results.json
