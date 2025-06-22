@@ -12,7 +12,7 @@ jobs:
 
       - name: Download trufflehog CLI
         run: |
-          curl -L https://github.com/trufflesecurity/trufflehog/releases/latest/download/trufflehog-linux-amd64 -o trufflehog
+          curl -L https://github.com/trufflesecurity/trufflehog/releases/download/v3.76.0/trufflehog-linux-amd64 -o trufflehog
           chmod +x trufflehog
 
       - name: Run trufflehog scan
