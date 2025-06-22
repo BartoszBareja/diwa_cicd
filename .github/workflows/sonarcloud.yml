@@ -34,17 +34,3 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner -Dsonar.login=$SONAR_TOKEN
-
-      - name: Export issues from SonarCloud API
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          curl -s -u "$SONAR_TOKEN:" \
-          "https://sonarcloud.io/api/issues/search?componentKeys=<TWÓJ_PROJECT_KEY>&resolved=false" \
-          -o sonar-report.json
-
-      - name: Upload SonarCloud report
-        uses: actions/upload-artifact@v4
-        with:
-          name: sonarcloud-report
-          path: sonar-report.json
