@@ -18,6 +18,11 @@ jobs:
       - name: Install truffleHog v3 (trufflehog3)
         run: pip install trufflehog3
 
+      - name: Run truffleHog3 scan and save output
+        run: trufflehog3 --repo-path . --json > trufflehog-results.json || true
 
-      - name: Run truffleHog scan and save output
-        run: trufflehog --repo-path . || true
+      - name: Upload truffleHog3 results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: trufflehog-results
+          path: trufflehog-results.json
