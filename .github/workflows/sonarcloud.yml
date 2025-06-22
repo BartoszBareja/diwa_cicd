@@ -31,8 +31,4 @@ jobs:
           export PATH="$PWD/sonar-scanner-5.0.1.3006-linux/bin:$PATH"
 
           sonar-scanner \
-            -Dsonar.projectKey=twoj-project-key \
-            -Dsonar.organization=twoja-organizacja \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
