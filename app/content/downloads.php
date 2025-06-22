@@ -1,9 +1,5 @@
 <?php
 
-$awsAccessKey = 'AKIAEXAMPLE1234567890';
-$githubToken = 'ghp_1234567890abcdef1234567890abcdef1234';
-$dbPassword = 'password=superSecret123!';
-
 $loggedIn = isLoggedIn();
 $isAdmin = (isset($_SESSION['user']['is_admin']) && 1 == $_SESSION['user']['is_admin']);
 $reviewMode = (isset($_GET['review']) && '1' == $_GET['review']);
