@@ -22,7 +22,7 @@ jobs:
         run: trufflehog --repo-path . --json > trufflehog-results.json || true
 
       - name: Upload truffleHog results artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: trufflehog-results
           path: trufflehog-results.json
