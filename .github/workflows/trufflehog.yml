@@ -16,7 +16,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install truffleHogv3
-        run: pip install trufflehogv3
+        run: pip install trufflehog3
 
       - name: Run truffleHog scan and save output
         run: trufflehog --repo-path . || true
