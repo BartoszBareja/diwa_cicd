@@ -15,8 +15,9 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install truffleHogv3
-        run: pip install trufflehog3
+      - name: Install truffleHog v3 from GitHub
+        run: pip install git+https://github.com/trufflesecurity/trufflehog.git@v3
+
 
       - name: Run truffleHog scan and save output
         run: trufflehog --repo-path . || true
