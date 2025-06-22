@@ -1,5 +1,9 @@
 <?php
 
+$awsAccessKey = 'AKIAEXAMPLE1234567890';
+$githubToken = 'ghp_1234567890abcdef1234567890abcdef1234';
+$dbPassword = 'password=superSecret123!';
+
 $loggedIn = isLoggedIn();
 $isAdmin = (isset($_SESSION['user']['is_admin']) && 1 == $_SESSION['user']['is_admin']);
 $reviewMode = (isset($_GET['review']) && '1' == $_GET['review']);
@@ -8,27 +12,19 @@ $reviewMode = (isset($_GET['review']) && '1' == $_GET['review']);
 try {
     $error = false;
     if(isset($_GET['approve']) && !empty($_GET['approve'])) {
-        // approve file in DB
         $allowGuests = '';
         if(isset($_GET['guests']) && '1' === $_GET['guests']) {
             $allowGuests = ', allow_guests = 1';
         }
-        ;
         if($model->approveDownload($_GET['approve'], (isset($pAllowGuests) && '1' === $pAllowGuests))) {
-            // redirect
             redirect('?page=downloads&review=1&approved=1');
-        }
-        else {
+        } else {
             $error = 'The File could not be published.';
         }
-    }
-    elseif(isset($_GET['delete']) && !empty($_GET['delete'])) {
-        // delete from DB
+    } elseif(isset($_GET['delete']) && !empty($_GET['delete'])) {
         if($model->removeDownload($_GET['delete'])) {
-            // redirect
             redirect('?page=downloads' . ($reviewMode ? '&review=1' : '') . '&deleted=1');
-        }
-        else {
+        } else {
             $error = 'The File could not be deleted.';
         }
     }
@@ -37,7 +33,6 @@ catch(Exception $ex) {
     error(500, 'Could not execute given (approve/delete) action', $ex);
 }
 
-// show downloads
 try {
     $result = $model->getDownloads(($reviewMode ? 0 : 1));
 }
