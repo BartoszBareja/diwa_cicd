@@ -1,16 +1,17 @@
 name: Secret Scan with Gitleaks
 
 on:
+  push:
+    branches: [ main ]
+  pull_request:
   workflow_dispatch:
 
 jobs:
   gitleaks-scan:
-    name: Scan for Secrets with Gitleaks
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Install Gitleaks
         run: |
@@ -23,6 +24,9 @@ jobs:
           gitleaks detect --source . \
                           --report-path gitleaks-report.json \
                           --report-format json || true
+          if [ ! -f gitleaks-report.json ]; then
+            echo '[]' > gitleaks-report.json
+          fi
 
       - name: Upload Gitleaks Report
         uses: actions/upload-artifact@v4
