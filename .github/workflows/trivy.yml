@@ -22,9 +22,19 @@ jobs:
           wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}/trivy_${TRIVY_VERSION#v}_Linux-64bit.deb
           sudo dpkg -i trivy_${TRIVY_VERSION#v}_Linux-64bit.deb
 
-      - name: Run Trivy vulnerability scan (HTML report)
+      - name: Download Trivy HTML template
+        run: curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o html.tpl
+
+      - name: Run Trivy scan with HTML report
         run: |
-          trivy image --format html -o trivy-report.html diwa
+          trivy image --format template --template @html.tpl -o trivy-report.html diwa
+
+      - name: Upload Trivy HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-html-report
+          path: trivy-report.html
+
 
       - name: Upload Trivy HTML report
         uses: actions/upload-artifact@v4
