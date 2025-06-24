@@ -25,13 +25,10 @@ jobs:
       - name: Verify app is running
         run: curl --fail http://localhost:8080
 
-      - name: Run ZAP CLI and post to issue
+      - name: Run OWASP ZAP Baseline Scan (no artifact)
         run: |
-          docker run --rm -v $(pwd):/zap/wrk owasp/zap2docker-stable zap-baseline.py \
-            -t http://localhost:8080 \
-            -J zap_report.json \
-            -r zap_report.html
-          cat zap_report.json
+          docker run --rm -v $(pwd):/zap/wrk ghcr.io/zaproxy/zap-baseline:latest \
+          -t http://localhost:8080 -J zap_report.json -r zap_report.html
 
       - name: Stop container
         run: docker stop diwa
