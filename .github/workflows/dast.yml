@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Nikto Scan and save report
         run: |
-          docker run --rm --network="host" sullo/nikto -h http://localhost:8080 -o nikto_report.txt -Format txt
+          docker run --rm --network="host" nikto/nikto -h http://localhost:8080 -o nikto_report.txt -Format txt
           cat nikto_report.txt
 
       - name: Create issue with Nikto report
