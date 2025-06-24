@@ -1,4 +1,4 @@
-name: DAST Scan
+name: DAST Scan with Nikto
 
 on:
   workflow_dispatch:
@@ -22,20 +22,17 @@ jobs:
       - name: Verify app is running
         run: curl --fail http://localhost:8080
 
-      - name: Run OWASP ZAP Baseline Scan (generate JSON report)
+      - name: Run Nikto Scan and save report
         run: |
-          docker run --rm -v ${{ github.workspace }}:/zap/wrk ghcr.io/zaproxy/zap-baseline:latest \
-            -t http://localhost:8080 -j -r zap_report.json
+          docker run --rm --network="host" sullo/nikto -h http://localhost:8080 -o nikto_report.txt -Format txt
+          cat nikto_report.txt
 
-      - name: Show ZAP report output (optional)
-        run: cat zap_report.json
-
-      - name: Create issue with ZAP report
+      - name: Create issue with Nikto report
         uses: peter-evans/create-issue-from-file@v4
         with:
-          title: OWASP ZAP Baseline Report
-          content-filepath: zap_report.json
-          labels: security, zap
+          title: Nikto DAST Scan Report
+          content-filepath: nikto_report.txt
+          labels: security, nikto
 
       - name: Stop app container
         run: docker stop diwa
