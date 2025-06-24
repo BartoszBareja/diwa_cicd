@@ -1,7 +1,3 @@
 User-agent: *
-Disallow: /
 Disallow: /?page=secret-xu2d7a
 Disallow: /admin/
-Disallow: /config.php
-Disallow: /download.php
-Disallow: /private/
