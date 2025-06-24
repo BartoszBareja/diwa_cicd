@@ -21,6 +21,8 @@ catch(Exception $ex) {
 
 ?>
 
+<meta name="csrf-token" content="not_required">
+
 <div class="row">
     <div class="col-lg-3">
         <h1>Documentation</h1><hr/>
