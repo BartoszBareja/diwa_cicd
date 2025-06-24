@@ -30,7 +30,8 @@ jobs:
         with:
           target: 'http://localhost:8080'
           cmd_options: '-a'
-          failAction: 'warn'
+          fail_action: 'warn'
+          artifact_name: 'zap-scan'
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
