@@ -30,6 +30,7 @@ jobs:
         with:
           target: 'http://localhost:8080'
           cmd_options: '-a'
+          allow_issue_writing: true
           fail_action: false
 
       - name: Stop container
