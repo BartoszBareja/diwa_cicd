@@ -33,6 +33,7 @@ jobs:
           allow_issue_writing: true
           issue_title: 'ZAP Scan Baseline Report'
           fail_action: false
+          artifact_name: ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
