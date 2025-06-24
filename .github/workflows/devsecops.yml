@@ -128,3 +128,36 @@ jobs:
 
       - name: Stop app container
         run: docker stop diwa
+
+  trivy-scan:
+    name: Trivy Scan
+    runs-on: ubuntu-latest
+    needs: dast-scan
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t diwa .
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          TRIVY_VERSION=$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep tag_name | cut -d '"' -f 4)
+          wget https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}/trivy_${TRIVY_VERSION#v}_Linux-64bit.deb
+          sudo dpkg -i trivy_${TRIVY_VERSION#v}_Linux-64bit.deb
+
+      - name: Download Trivy HTML template
+        run: curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o html.tpl
+
+      - name: Run Trivy scan with HTML report
+        run: |
+          trivy image --format template --template @html.tpl -o trivy-report.html diwa
+
+      - name: Upload Trivy HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-html-report-${{ github.run_id }}
+          path: trivy-report.html
