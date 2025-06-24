@@ -1,5 +1,5 @@
 User-agent: *
-Allow: /
+Disallow: /
 Disallow: /?page=secret-xu2d7a
 Disallow: /admin/
 Disallow: /config.php
