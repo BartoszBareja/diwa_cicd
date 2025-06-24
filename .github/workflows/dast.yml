@@ -30,7 +30,7 @@ jobs:
         with:
           target: 'http://localhost:8080'
           cmd_options: '-a'
-          fail_action: 'warn'
+          fail_action: false
           artifact_name: 'zapscan'
 
       - name: Stop container
