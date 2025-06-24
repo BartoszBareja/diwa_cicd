@@ -1,32 +1,31 @@
 <?php
 session_start();
 
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 $errors = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Weryfikacja CSRF
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
         $errors[] = 'Invalid CSRF token.';
     }
 
-    // Walidacja pola name
     $name = trim($_POST['name'] ?? '');
     if (strlen($name) < 3 || strlen($name) > 100) {
         $errors[] = 'Your name must be between 3 and 100 characters.';
     }
 
-    // Walidacja emaila
     $email = trim($_POST['email'] ?? '');
     if (!filter_var($email, FILTER_VALIDATE_EMAIL) || preg_match('/[\r\n]/', $email)) {
         $errors[] = 'Please enter a valid E-Mail address.';
     }
 
-    // Walidacja odbiorców
     $recipients = $_POST['recipients'] ?? [];
     if (!is_array($recipients) || count($recipients) === 0) {
         $errors[] = 'Please select at least one recipient.';
     }
 
-    // Walidacja wiadomości
     $message = trim($_POST['message'] ?? '');
     if (strlen($message) < 3 || strlen($message) > 1000) {
         $errors[] = 'Your message must be between 3 and 1000 characters.';
@@ -40,19 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($recipients as $recipient) {
             $recipient = trim($recipient);
 
-            // Zapis do loga
-            if (@file_put_contents(
+            @file_put_contents(
                 ROOT_PATH . '/logs/mail.log',
                 '[=== ' . date('Y-m-d H:i:s') . ' ===]' . PHP_EOL .
                 'TO: ' . $recipient . PHP_EOL .
                 'FROM: ' . $name . ' <' . $email . '>' . PHP_EOL .
                 'MESSAGE:' . PHP_EOL . $message . PHP_EOL . PHP_EOL,
                 FILE_APPEND
-            )) {
-                $logCount++;
-            }
+            );
 
-            // Wysyłka e-maila
             if ($useMailFunction) {
                 $headers = 'From: ' . $name . ' <' . $email . '>';
                 if (@mail($recipient, 'New Message from DIWA', $message, $headers)) {
@@ -71,7 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Pobranie listy adminów
 try {
     $resultAdmins = $model->getAllAdmins();
     if (!$resultAdmins || count($resultAdmins) === 0) {
@@ -79,11 +73,6 @@ try {
     }
 } catch (Exception $ex) {
     error(500, 'Could not query admins from Database', $ex);
-}
-
-// Generuj CSRF token
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 ?>
 
