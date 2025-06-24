@@ -22,15 +22,20 @@ jobs:
       - name: Verify app is running
         run: curl --fail http://localhost:8080
 
-      - name: Run Nikto Scan and save report
+      - name: Install Nikto
         run: |
-          docker run --rm --network="host" nikto/nikto -h http://localhost:8080 -o nikto_report.txt -Format txt
+          sudo apt-get update
+          sudo apt-get install -y nikto
+
+      - name: Run Nikto scan
+        run: |
+          nikto -h http://localhost:8080 -o nikto_report.txt -Format txt
           cat nikto_report.txt
 
       - name: Create issue with Nikto report
         uses: peter-evans/create-issue-from-file@v4
         with:
-          title: Nikto DAST Scan Report
+          title: Nikto DAST Report
           content-filepath: nikto_report.txt
           labels: security, nikto
 
