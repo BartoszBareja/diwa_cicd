@@ -1,10 +1,7 @@
 name: DAST Scan
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   dast-scan:
@@ -13,7 +10,6 @@ jobs:
     services:
       docker:
         image: docker:dind
-        privileged: true
         options: --dns 8.8.8.8
         ports:
           - 8080:8080
