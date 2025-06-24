@@ -7,13 +7,6 @@ jobs:
   dast-scan:
     runs-on: ubuntu-latest
 
-    services:
-      docker:
-        image: docker:dind
-        options: --dns 8.8.8.8
-        ports:
-          - 8080:80
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -32,12 +25,11 @@ jobs:
       - name: Verify app is running
         run: curl --fail http://localhost:8080
 
-      # Możesz tu dodać np. OWASP ZAP lub inne narzędzie DAST
       - name: Run OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.7.0
+        uses: zaproxy/action-baseline@v0.12.0
         with:
           target: 'http://localhost:8080'
           cmd_options: '-a'
 
-      - name: Stop containers
+      - name: Stop container
         run: docker stop diwa
