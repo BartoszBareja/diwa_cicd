@@ -32,13 +32,5 @@ jobs:
       - name: Upload Trivy HTML report
         uses: actions/upload-artifact@v4
         with:
-          name: trivy-html-report
+          name: trivy-html-report-${{ github.run_id }}
           path: trivy-report.html
-
-
-      - name: Upload Trivy HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-html-report
-          path: trivy-report.html
-
