@@ -11,9 +11,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build Docker image
         run: docker build -t diwa .
 
@@ -25,22 +22,20 @@ jobs:
       - name: Verify app is running
         run: curl --fail http://localhost:8080
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run OWASP ZAP Baseline Scan
+      - name: Run OWASP ZAP Baseline Scan (generate JSON report)
         run: |
-          docker run --rm -v ${{ github.workspace }}:/zap/wrk ghcr.io/zaproxy/zap-baseline:latest -t http://host.docker.internal:8080
+          docker run --rm -v ${{ github.workspace }}:/zap/wrk ghcr.io/zaproxy/zap-baseline:latest \
+            -t http://localhost:8080 -j -r zap_report.json
 
-      - name: Upload ZAP Report
-        uses: actions/upload-artifact@v3
+      - name: Show ZAP report output (optional)
+        run: cat zap_report.json
+
+      - name: Create issue with ZAP report
+        uses: peter-evans/create-issue-from-file@v4
         with:
-          name: zap-baseline-report
-          path: report.html
+          title: OWASP ZAP Baseline Report
+          content-filepath: zap_report.json
+          labels: security, zap
 
       - name: Stop app container
         run: docker stop diwa
